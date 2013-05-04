@@ -7,6 +7,7 @@ var delegate = require('ever-delegate')
   , dn = require('domnode-dom')
   , g2j = require('git-to-js')
   , crypto = require('crypto')
+  , binary = require('bops')
   , plate = require('plate')
   , ever = require('ever')
   , TYPE_MAP
@@ -67,8 +68,8 @@ function render(db, refs) {
       if(!data) {
         return ready()
       }
-      data = g2j(data.type, new Buffer(data.data, 'base64'))
-      data.hash = oid.toString('hex')
+      data = g2j(data.type, binary.from(data.data, 'base64'))
+      data.hash = typeof oid !== 'string' ? binary.to(oid, 'hex') : oid
       ready(null, data) 
     })
   } 

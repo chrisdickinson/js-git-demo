@@ -2,7 +2,7 @@ var shoe = require('shoe')
   , fetch = require('git-fetch-pack')
   , unpack = require('git-list-pack')
   , through = require('through')
-  , Buffer = require('buffer').Buffer
+  , binary = require('bops')
   , walk = require('git-walk-refs')
   , objectify = require('git-objectify-pack')
   , levelidb = require('levelidb')
@@ -71,7 +71,7 @@ function parse() {
     // turn it back into a JS object + buffer data.
     data = JSON.parse(data)
     if(data.data !== null) {
-      data.data = new Buffer(data.data, 'base64')
+      data.data = binary.from(data.data, 'base64')
     }
     this.queue(data)
   })
@@ -79,9 +79,9 @@ function parse() {
 
 function dbify(obj) {
   var base = obj.serialize()
-    , buf = new Buffer(obj.looseType+' '+base.length+'\0')
+    , buf = binary.from(obj.looseType+' '+base.length+'\0', 'utf8')
 
-  this.queue({key: 'hash:'+obj.hash, value: {type: obj.type, data: base.toString('base64')}})
+  this.queue({key: 'hash:'+obj.hash, value: {type: obj.type, data: binary.to(buf, 'base64')}})
 }
 
 window.please_render = end

@@ -33,7 +33,7 @@ function serve(req, resp) {
     bfy.transform('brfs')
     resp.statusCode = 200
     resp.setHeader('content-type', 'text/javascript')
-    bfy.bundle().pipe(resp)
+    bfy.bundle({debug: true}).pipe(resp)
     return
   }
   ecstatic(req, resp)
