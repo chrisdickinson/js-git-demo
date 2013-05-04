@@ -25,7 +25,6 @@
     "git-packed-ref-parse": "0.0.0",
     "brfs": "0.0.3",
     "browserify": "~2.11.0",
-    "git-walk-tree": "0.0.1",
     "git-walk-refs": "0.0.1",
     "plate": "~1.0.9",
     "ever": "0.0.3",

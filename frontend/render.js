@@ -2,7 +2,6 @@ module.exports = render
 
 var delegate = require('ever-delegate')
   , walk = require('git-walk-refs')
-  , files = require('git-walk-tree')
   , sel = require('cssauron-html')
   , through = require('through')
   , dn = require('domnode-dom')
