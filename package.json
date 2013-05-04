@@ -11,19 +11,20 @@
   "license": "MIT",
   "devDependencies": {
     "browserify": "~2.11.0",
-    "git-fetch-pack": "0.0.1",
+    "git-fetch-pack": "0.0.2",
     "git-walk-refs": "0.0.1",
-    "git-objectify-pack": "0.0.3",
+    "git-objectify-pack": "0.0.4",
     "tape": "~1.0.1"
   },
   "dependencies": {
     "concat-stream": "~0.1.1",
     "through": "~2.2.7",
-    "git-transport-protocol": "0.0.3",
-    "git-list-pack": "0.0.4",
     "ecstatic": "~0.4.2",
     "shoe": "0.0.10",
+    "git-transport-protocol": "0.0.4",
+    "git-list-pack": "0.0.5",
     "git-packed-ref-parse": "0.0.0",
+    "git-to-js": "0.0.4",
     "brfs": "0.0.3",
     "browserify": "~2.11.0",
     "git-walk-refs": "0.0.1",
@@ -31,9 +32,9 @@
     "ever": "0.0.3",
     "ever-delegate": "0.0.0",
     "idb-wrapper": "~1.1.0",
-    "git-to-js": "0.0.3",
     "cssauron-html": "0.0.1",
     "domnode-dom": "0.0.2",
-    "bops": "0.0.1"
+    "bops": "0.0.2",
+    "level-js": "~1.0.2"
   }
 }
