@@ -28,14 +28,14 @@ db = levelidb('/tmp/git', {
 
 // automatically clone plate.
 client = fetch(
-    'git://github.com/maks/testsite.git'
+    'git://github.com/chrisdickinson/plate.git'
   , want
 )
 
 // we get a callback for each ref. say `true`
 // if we want the ref, `false` if we don't.
 function want(ref, ready) {
-  var do_want = /(HEAD|heads|pull)/.test(ref.name)
+  var do_want = /(master)/.test(ref.name)
   if(do_want) {
     refs.push(ref)    
   }
