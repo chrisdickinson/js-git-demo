@@ -64,12 +64,16 @@ function render(db, refs) {
   }
 
   function find(oid, ready) {
-    db.get('hash:'+oid.toString('hex'), function(err, data) {
+    oid = typeof oid === 'string' ? oid : binary.to(oid, 'hex')
+
+    db.get('hash:'+oid, function(err, data) {
       if(!data) {
         return ready()
       }
-      data = g2j(data.type, binary.from(data.data, 'base64'))
-      data.hash = typeof oid !== 'string' ? binary.to(oid, 'hex') : oid
+
+      data = g2j(data[0], binary.subarray(data, 1))
+
+      data.hash = oid
       ready(null, data) 
     })
   } 

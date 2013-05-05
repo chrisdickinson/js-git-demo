@@ -13,7 +13,7 @@
     "browserify": "~2.11.0",
     "git-fetch-pack": "0.0.2",
     "git-walk-refs": "0.0.1",
-    "git-objectify-pack": "0.0.4",
+    "git-objectify-pack": "0.0.5",
     "tape": "~1.0.1"
   },
   "dependencies": {
