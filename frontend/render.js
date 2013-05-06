@@ -5,11 +5,10 @@ var delegate = require('ever-delegate')
   , sel = require('cssauron-html')
   , through = require('through')
   , dn = require('domnode-dom')
-  , g2j = require('git-to-js')
   , crypto = require('crypto')
-  , binary = require('bops')
   , plate = require('plate')
   , ever = require('ever')
+  , _find = require('./find')
   , TYPE_MAP
 
 plate.Template.Meta.registerFilter('gravatar', gravatar)
@@ -22,7 +21,6 @@ TYPE_MAP = {
 }
 
 var fs = require('fs')
-
 // thanks brfs!
 var commit_template = fs.readFileSync(__dirname + '/templates/commit.html')
 var framing = fs.readFileSync(__dirname + '/templates/framing.html')
@@ -31,6 +29,8 @@ framing = new plate.Template(framing)
 
 function render(db, refs) {
   var hashes = []
+    , find = _find(db)
+
   for(var i = 0, len = refs.length; i < len; ++i) {
     hashes[hashes.length] = refs[i].hash
   }
@@ -62,21 +62,6 @@ function render(db, refs) {
         .pipe(dn.createAppendStream(target, 'text/html'))
     }
   }
-
-  function find(oid, ready) {
-    oid = typeof oid === 'string' ? oid : binary.to(oid, 'hex')
-
-    db.get('hash:'+oid, function(err, data) {
-      if(!data) {
-        return ready()
-      }
-
-      data = g2j(data[0], binary.subarray(data, 1))
-
-      data.hash = oid
-      ready(null, data) 
-    })
-  } 
 }
 
 function template(src) {

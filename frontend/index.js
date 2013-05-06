@@ -8,10 +8,12 @@ var shoe = require('shoe')
   , leveljs = require('level-js')
   , through = require('through')
   , render = require('./render')
+  , _find = require('./find')
 
 // make a websocket connection to the
 // server.
 var conn = shoe('/git')
+  , pending = {} 
   , refs = []
   , client
   , db
@@ -27,9 +29,11 @@ db.open(got_db)
 function got_db() {
   // automatically clone plate.
   client = fetch(
-      'git://github.com/chrisdickinson/plate.git'
+      'git://github.com/mbostock/d3.git'
     , want
   )
+
+  find = _find(db, pending)
 
   // we get a callback for each ref. say `true`
   // if we want the ref, `false` if we don't.
@@ -46,21 +50,23 @@ function got_db() {
     .pipe(parse())
     .pipe(client)
 
-  function find(oid, ready) {
-    // for finding ref-delta objects that might
-    // be outside of the current packfile
-    return ready(null, null)
-  }
-
   // `pack` is a separate stream that
   // emits binary packfile data.
   client.pack
     .once('data', function() { window.start = Date.now() })
     .pipe(unpack())
       .on('data', function(d) { pre.textContent = ''+(d.num) })
-      .on('end', end)
     .pipe(objectify(find))
     .pipe(through(dbify))
+      .on('end', end)
+
+  function debounce(fn) {
+    var timeout
+    return function(d) {
+      clearTimeout(timeout)
+      timeout = setTimeout(fn, 0, d)
+    }
+  }
 
   // parse turns our serialized objects
   // back into js objects.
@@ -78,11 +84,17 @@ function got_db() {
   function dbify(obj) {
     var base = obj.serialize()
       , buf = binary.from([obj.type])
+      , self = this
 
     buf = binary.join([buf, base])
 
+    pending[obj.hash] = obj
+
     db.put('hash:'+obj.hash, buf, function(err, data) {
-      //console.log('hash:'+obj.hash, obj)    
+      if(err) {
+        console.log(err.stack)
+      }
+      pending[obj.hash] = null
     })
   }
 
