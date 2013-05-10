@@ -106,7 +106,6 @@ function got_db() {
 
     pending[obj.hash] = obj
 
-    console.log('putting', 'hash:'+obj.hash, buf)
     db.put('hash:'+obj.hash, buf, function(err, data) {
       if(err) {
         console.log(err.stack)
