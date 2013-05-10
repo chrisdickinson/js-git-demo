@@ -11,7 +11,7 @@ var tcp = net.connect({host: 'github.com', port: 9418})
   , client
 
 function want(ref, ready) {
-  return ready(/(heads)/.test(ref.name))
+  return ready(/(master)/.test(ref.name))
 }
 
 client = gitclient(
@@ -26,11 +26,25 @@ client
 
 // when we get packfile data, it'll come out of this
 // readable stream.
+
+var c = 0
+  , o = 0
+  , h = {}
+
 client.pack
   .pipe(unpack())
-    .on('data', function(info) { console.log('-->', info.num) })
+    .on('data', function(x) { console.log(x.offset); ++c })
+    .on('end', function() { console.log('\n\n%d unpack, %d obj', c, o) })
+  .pipe(objectify(find))
+    .on('data', function(x) {
+      h[x.hash] = x
+      if(x.looseType === 'blob') {
+        console.log(x.data()+'')
+      }
+      ++o
+    })
 
 function find(hash, ready) {
-  return ready()
+  return ready(null, h[hash.toString('hex')])
 }
 

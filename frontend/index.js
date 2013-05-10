@@ -19,17 +19,33 @@ var conn = shoe('/git')
   , db
 
 var pre = document.createElement('pre')
- 
-document.body.appendChild(pre)
+  , form = document.createElement('form')
+  , input = document.createElement('input')
+  , submit = document.createElement('input')
+  , repo = 'chrisdickinson/plate'
 
-// create a leveldb database.
-db = leveljs('git')
-db.open(got_db)
+submit.type = 'submit'
+submit.value = 'clone'
+input.type = 'text'
+input.placeholder = 'chrisdickinson/plate'
+form.appendChild(input)
+form.appendChild(submit)
+
+form.addEventListener('submit', function(ev) {
+  ev.preventDefault()
+  repo = input.value || repo
+  // create a leveldb database.
+  form.parentNode.removeChild(form)
+  document.body.appendChild(pre)
+  db = leveljs('git')
+  db.open(got_db)
+})
+
+document.getElementById('content').appendChild(form)
 
 function got_db() {
-  // automatically clone plate.
   client = fetch(
-      'git://github.com/mbostock/d3.git'
+      'git://github.com/'+repo+'.git'
     , want
   )
 
@@ -90,6 +106,7 @@ function got_db() {
 
     pending[obj.hash] = obj
 
+    console.log('putting', 'hash:'+obj.hash, buf)
     db.put('hash:'+obj.hash, buf, function(err, data) {
       if(err) {
         console.log(err.stack)
